@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Water Footprint Calculator</title>
+        <link rel="stylesheet" href="striff.css">
+        <link rel="icon" href="save.png" type="image/x-icon">
+        <link rel="shortcut icon" href="save.png" type="image/x-icon">
+        <style>
+            link[rel="icon"] {
+                width: 300px;
+                height: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="upper">Welcome</div>
+            <div class="lower">Welcome</div>
+            <div class="inside"><b>Water Footprint Calculator</b></div>
+        </div>
+        <div class="cont">
+            <h1>Enter The Product</h1>
+            <h1>(The values are approximate and can vary based on many factors)</h1>
+            <form onsubmit="return false;">
+                <input type="text" id="inputField" placeholder="Type something...">
+                <button type="submit" onclick="getValue()">Get Value</button>
+            </form>
+            <p><span id="displayValue"></span></p>
+
+            <!-- Add the image upload button -->
+            <input type="file" id="imageUpload" accept="image/*">
+            <button onclick="uploadImage()">Upload Image</button>
+        </div>
+        <script src="mysc1.js"></script>
+        <script src="mysc.js"></script>
+        <script>
+            function uploadImage() {
+                const fileInput = document.getElementById("imageUpload");
+                const inputField = document.getElementById("inputField");
+                const displayValue = document.getElementById("displayValue");
+                const formData = new FormData();
+                formData.append("photo", fileInput.files[0]);
+
+                fetch("http://127.0.0.1:5000/classify", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const classification = data.classification;
+                    displayValue.innerText = `Classification: ${classification}`;
+
+                    // Set the classification result as the value of the input field
+                    inputField.value = classification;
+                    
+                })
+                .catch(error => {
+                    displayValue.innerText = "Error: " + error.message;
+                });
+            }
+        </script>
+    </body>
+</html>
